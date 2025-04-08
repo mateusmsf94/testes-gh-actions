@@ -27,9 +27,9 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Building the project...
+      # Build the application
+      - name: Build application
+        run: echo Building the application...
 
   # Test job
   test:
@@ -41,9 +41,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Runs a single command using the runners shell
-      - name: Run tests
-        run: echo Running tests...
+      # Run linting
+      - name: Run linting
+        run: echo Running linting...
+
+      # Run unit tests
+      - name: Run unit tests
+        run: echo Running unit tests...
+
+      # Run integration tests
+      - name: Run integration tests
+        run: echo Running integration tests...
 
   # Staging job
   staging:
@@ -55,7 +63,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Runs a single command using the runners shell
+      # Deploy to staging
       - name: Deploy to staging
         run: echo Deploying to staging...
 
@@ -69,6 +77,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Runs a single command using the runners shell
+      # Confirm production deployment
+      - name: Confirm production deployment
+        run: echo Confirming production deployment...
+
+      # Deploy to production
       - name: Deploy to production
         run: echo Deploying to production...
