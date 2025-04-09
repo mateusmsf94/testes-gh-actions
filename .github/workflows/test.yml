@@ -75,6 +75,8 @@ jobs:
   production:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    # Define the deployment environment
+    environment: production
     # Runs only on push to the main branch
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
@@ -82,10 +84,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Confirm production deployment
-      - name: Confirm production deployment
-        run: echo Confirming production deployment...
-
-      # Deploy to production
+      # Deploy to production (will run after manual approval via environment protection rule)
       - name: Deploy to production
         run: echo Deploying to production...
