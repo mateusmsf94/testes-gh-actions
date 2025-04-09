@@ -14,6 +14,12 @@ on:
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+    inputs:
+      confirm_production:
+        description: 'Confirm production deployment'
+        required: true
+        type: boolean
+        default: false
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -24,7 +30,7 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-outs your repository under $GITHUB_WORKSPACE, so your job can access it
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
 
       # Build the application
@@ -71,20 +77,33 @@ jobs:
       - name: Deploy to staging
         run: echo Deploying to staging...
 
+  # Manual confirmation job
+  confirm_production:
+    runs-on: ubuntu-latest
+    needs: test
+    if: |
+      github.event_name == 'workflow_dispatch' &&
+      github.event.inputs.confirm_production == true
+
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Confirm production deployment
+        run: echo Confirming production deployment...
+
   # Production job
   production:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-    # Define the deployment environment
-    environment: production
-    # Runs only on push to the main branch
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    
+    needs: confirm_production
+    if: |
+      github.event_name == 'workflow_dispatch' &&
+      github.event.inputs.confirm_production == true
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - uses: actions/checkout@v4
 
-      # Deploy to production (will run after manual approval via environment protection rule)
+      # Deploy to production
       - name: Deploy to production
         run: echo Deploying to production...
